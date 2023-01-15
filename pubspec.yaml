@@ -66,6 +66,8 @@ flutter:
   assets:
      - media/images/logo_appbar.png
      - media/images/liga_bwin.png
+     - media/images/plus_news_bg.jpg
+     - media/images/plus_transfermarket_bg.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

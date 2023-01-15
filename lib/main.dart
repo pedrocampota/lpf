@@ -1,9 +1,11 @@
 // Libraries
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-// Classes
-import 'Screens/HomeScreen.dart';
+// Pages
 import 'Pages/Competitions.dart';
+import 'Pages/Plus.dart';
+
+//Actions Classes
 
 void main() {
   runApp(const MyApp());
@@ -64,7 +66,7 @@ class _MainPageState extends State<MainPage> {
     Center(child: Text('Página Inicial')),
     Center(child: Text('Página dos Clubes')),
     Competitions(),
-    Center(child: Text('Mais Informações')),
+    Plus(),
   ];
 
   @override
