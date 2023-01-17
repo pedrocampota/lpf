@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 
 class TableScreen extends StatefulWidget {
@@ -16,7 +15,7 @@ class TableScreen extends StatefulWidget {
 
 class _TableScreenState extends State<TableScreen> {
   List? _table;
-
+  // Sync table with api request data
   getTable() async {
     http.Response response = await http.get(
         Uri.parse(

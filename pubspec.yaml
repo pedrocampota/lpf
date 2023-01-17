@@ -37,8 +37,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   http: ^0.13.5
-  flutter_svg: ^1.1.6
   iconsax: ^0.0.8
+  cached_network_image: ^3.2.3
+  url_launcher: ^6.1.7
+  webfeed: ^0.7.0
+  intl: ^0.17.0
+  date_format: ^2.0.7
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +72,7 @@ flutter:
      - media/images/liga_bwin.png
      - media/images/plus_news_bg.jpg
      - media/images/plus_transfermarket_bg.jpg
+     - media/images/background_placeholder.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

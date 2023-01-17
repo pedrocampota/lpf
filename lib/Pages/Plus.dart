@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:lpf/Screens/News.dart';
 import 'package:lpf/Screens/TableScreen.dart';
 import 'package:lpf/Widgets/LeagueContainer.dart';
 
@@ -73,9 +74,7 @@ class Plus extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => TableScreen(
-                                    code: 'PPL',
-                                    leagueName: 'Liga Portugal Bwin'),
+                                builder: (context) => News(),
                               ));
                         },
                       ),
