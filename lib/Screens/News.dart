@@ -23,7 +23,8 @@ class NewsState extends State<News> {
   static const String loadingFeedMsg = 'Loading Feed...';
   static const String feedLoadErrorMsg = 'Error Loading Feed.';
   static const String feedOpenErrorMsg = 'Error Opening Feed.';
-  static const String placeholderImg ='media/images/background_placeholder.png';
+  static const String placeholderImg =
+      'media/images/background_placeholder.png';
   GlobalKey<RefreshIndicatorState>? _refreshKey;
 
   updateTitle(title) {
@@ -84,7 +85,10 @@ class NewsState extends State<News> {
   title(title) {
     return Text(
       title,
-      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+      style: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.w500,
+          color: Color.fromARGB(255, 6, 82, 187)),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
@@ -93,7 +97,7 @@ class NewsState extends State<News> {
   subtitle(subTitle) {
     return Text(
       subTitle,
-      style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w100),
+      style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w100),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
@@ -101,23 +105,15 @@ class NewsState extends State<News> {
 
   thumbnail(imageUrl) {
     return Padding(
-      padding: EdgeInsets.only(left: 15.0),
+      padding: EdgeInsets.only(left: 0, right: 0),
       child: CachedNetworkImage(
         placeholder: (context, url) => Image.asset(placeholderImg),
         imageUrl: imageUrl,
-        height: 50,
-        width: 70,
+        height: 500,
+        width: 500,
         alignment: Alignment.center,
-        fit: BoxFit.fill,
+        fit: BoxFit.cover,
       ),
-    );
-  }
-
-  rightIcon() {
-    return Icon(
-      Icons.keyboard_arrow_right,
-      color: Colors.grey,
-      size: 30.0,
     );
   }
 
@@ -136,14 +132,55 @@ class NewsState extends State<News> {
         final imageUrl = originalImageUrlString.replaceAll(
             'https://cdn.record.pt/images/https://cdn.record.pt/images/',
             'https://cdn.record.pt/images/');
-        return ListTile(
-          title: title(item?.title),
-          subtitle: subtitle(formattedDate),
-          leading: thumbnail(imageUrl),
-          trailing: rightIcon(),
-          contentPadding: EdgeInsets.all(5.0),
-          onTap: () => openFeed(item?.link),
-        );
+
+        var pubTitle = item?.title;
+        final pubTitleToShow = pubTitle.toString().length > 30
+            ? pubTitle.toString().substring(0, 30) + '...'
+            : pubTitle.toString();
+        return GestureDetector(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Card(
+                shadowColor: Colors.grey.shade100,
+                elevation: 1,
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                child: Container(
+                  height: 200,
+                  alignment: Alignment.bottomLeft,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        colorFilter: ColorFilter.mode(
+                            Colors.black.withOpacity(0.2), BlendMode.srcOver),
+                        image: new NetworkImage(imageUrl),
+                        fit: BoxFit.cover),
+                  ),
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        pubTitleToShow,
+                        style: TextStyle(
+                          color: Color(0xFFFFFFFF),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 2,
+                      ),
+                      Text(formattedDate,
+                          style: TextStyle(
+                              color: Color(0xFFFFFFFF),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w300))
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            onTap: () => openFeed(item?.link));
       },
     );
   }
