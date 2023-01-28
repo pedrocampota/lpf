@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lpf/Screens/TableScreen.dart';
@@ -6,37 +8,31 @@ import 'package:lpf/Widgets/LeagueContainer.dart';
 class Competitions extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-              colors: [
-                Color.fromARGB(255, 255, 255, 255),
-                Color.fromARGB(255, 255, 255, 255),
-              ],
-              begin: const FractionalOffset(0.0, 0.0),
-              end: const FractionalOffset(0.0, 1.0),
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp,
-            )),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+          body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: ColoredBox(
+                color: Color.fromARGB(255, 33, 91, 171),
+                child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      'Competições',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFFFFFFFF),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400
+                      ),
+                    )),
+              ),
+            ),
+            Expanded(
+                child: Padding(
+              padding: EdgeInsets.all(15.0),
               child: ListView(
                 children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    'Competições',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
                   GridView.count(
                     shrinkWrap: true,
                     crossAxisCount: 2,
@@ -60,8 +56,8 @@ class Competitions extends StatelessWidget {
                   )
                 ],
               ),
-            ),
-          ),
+            ))
+          ],
         ),
-      );
+      ));
 }
