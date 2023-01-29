@@ -5,22 +5,22 @@ import 'package:iconsax/iconsax.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 //Modal Objects
-import 'package:lpf/Modal/League.dart';
+import 'package:lpf/Modal/Player.dart';
 
-class EditLeague extends StatefulWidget {
-  const EditLeague({super.key});
+class EditPlayer extends StatefulWidget {
+  const EditPlayer({super.key});
 
   @override
-  State<EditLeague> createState() => _EditLeagueState();
+  State<EditPlayer> createState() => _EditPlayerState();
 }
 
-class _EditLeagueState extends State<EditLeague> {
+class _EditPlayerState extends State<EditPlayer> {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 18, 18, 18),
         title: Text(
-          'Editar Liga',
+          'Editar Jogadores',
           style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
         ),
         leading: IconButton(
@@ -31,36 +31,36 @@ class _EditLeagueState extends State<EditLeague> {
             }),
         actions: [],
       ),
-      body: StreamBuilder<List<League>>(
-          stream: listLeagues(),
+      body: StreamBuilder<List<Player>>(
+          stream: listPlayers(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Erro: ${snapshot.error}');
             } else if (snapshot.hasData) {
-              final leagues = snapshot.data!;
+              final players = snapshot.data!;
 
               return ListView(
-                children: leagues.map(buildLeague).toList(),
+                children: players.map(buildPlayers).toList(),
               );
             } else {
-              return Center(child: Text('Sem ligas para mostrar'));
+              return Center(child: Text('Não existem jogadores registados.'));
             }
           }));
 
-  //Function to list leagues
-  Stream<List<League>> listLeagues() => FirebaseFirestore.instance
-      .collection('leagues')
+  //Function to list players
+  Stream<List<Player>> listPlayers() => FirebaseFirestore.instance
+      .collection('players')
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map((doc) => League.fromJson(doc.data())).toList());
+          snapshot.docs.map((doc) => Player.fromJson(doc.data())).toList());
 
-  Widget buildLeague(League league) => Container(
+  Widget buildPlayers(Player player) => Container(
         child: Column(
           children: [
             Padding(
               padding: EdgeInsets.all(10),
               child: Text(
-                league.name,
+                player.name,
                 style: TextStyle(color: Colors.black, fontSize: 18),
               ),
             )

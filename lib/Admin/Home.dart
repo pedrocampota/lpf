@@ -5,9 +5,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lpf/Admin/Pages/AddLeague.dart';
 
 // Pages
-import 'package:lpf/Admin/Pages/AddLeague.dart';
-
+import 'Pages/AddLeague.dart';
 import 'Pages/EditLeague.dart';
+import 'Pages/AddPlayer.dart';
+import 'Pages/EditPlayer.dart';
+import 'Pages/AddTeam.dart';
+import 'Pages/EditTeam.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key, required this.title});
@@ -78,11 +81,19 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                 },
                               ),
                               GestureDetector(
+                                child: card('Adicionar/Editar\n Equipa',
+                                    0xFF090979, 0xFF00d4ff, Iconsax.people),
+                                onTap: () {
+                                  openActionDialogManageArea('Equipas',
+                                      () => AddTeam(), () => EditTeam());
+                                },
+                              ),
+                              GestureDetector(
                                 child: card('Adicionar/Editar\n Jogador',
                                     0xFF090979, 0xFF00d4ff, Iconsax.user),
                                 onTap: () {
-                                  showToastMessage(
-                                      'Não disponivel de momento.');
+                                  openActionDialogManageArea('Jogadores',
+                                      () => AddPlayer(), () => EditPlayer());
                                 },
                               )
                             ],

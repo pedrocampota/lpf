@@ -5,22 +5,22 @@ import 'package:iconsax/iconsax.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 //Modal Objects
-import 'package:lpf/Modal/League.dart';
+import 'package:lpf/Modal/Team.dart';
 
-class EditLeague extends StatefulWidget {
-  const EditLeague({super.key});
+class EditTeam extends StatefulWidget {
+  const EditTeam({super.key});
 
   @override
-  State<EditLeague> createState() => _EditLeagueState();
+  State<EditTeam> createState() => _EditTeamState();
 }
 
-class _EditLeagueState extends State<EditLeague> {
+class _EditTeamState extends State<EditTeam> {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 18, 18, 18),
         title: Text(
-          'Editar Liga',
+          'Editar Equipas',
           style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
         ),
         leading: IconButton(
@@ -31,36 +31,36 @@ class _EditLeagueState extends State<EditLeague> {
             }),
         actions: [],
       ),
-      body: StreamBuilder<List<League>>(
-          stream: listLeagues(),
+      body: StreamBuilder<List<Team>>(
+          stream: listTeams(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Erro: ${snapshot.error}');
             } else if (snapshot.hasData) {
-              final leagues = snapshot.data!;
+              final teams = snapshot.data!;
 
               return ListView(
-                children: leagues.map(buildLeague).toList(),
+                children: teams.map(buildTeam).toList(),
               );
             } else {
               return Center(child: Text('Sem ligas para mostrar'));
             }
           }));
 
-  //Function to list leagues
-  Stream<List<League>> listLeagues() => FirebaseFirestore.instance
-      .collection('leagues')
+  //Function to list teams
+  Stream<List<Team>> listTeams() => FirebaseFirestore.instance
+      .collection('teams')
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map((doc) => League.fromJson(doc.data())).toList());
+          snapshot.docs.map((doc) => Team.fromJson(doc.data())).toList());
 
-  Widget buildLeague(League league) => Container(
+  Widget buildTeam(Team team) => Container(
         child: Column(
           children: [
             Padding(
               padding: EdgeInsets.all(10),
               child: Text(
-                league.name,
+                team.name,
                 style: TextStyle(color: Colors.black, fontSize: 18),
               ),
             )

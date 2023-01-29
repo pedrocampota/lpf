@@ -83,7 +83,7 @@ class _MainPageState extends State<MainPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => AdminHomePage(
-                      title: 'Página de Admin',
+                      title: 'Administração',
                     ),
                   ));
             },
