@@ -2,6 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lpf/Admin/Pages/AddLeague.dart';
+
+// Pages
+import 'package:lpf/Admin/Pages/AddLeague.dart';
+
+import 'Pages/EditLeague.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key, required this.title});
@@ -21,7 +27,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
             style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
           ),
           leading: IconButton(
-              icon: const Icon(Iconsax.logout),
+              icon: const Icon(Iconsax.backward),
               color: Colors.white,
               onPressed: () {
                 Navigator.pop(context);
@@ -30,7 +36,18 @@ class _AdminHomePageState extends State<AdminHomePage> {
             IconButton(
               icon: const Icon(Iconsax.more_square),
               color: Colors.white,
-              onPressed: () {},
+              onPressed: () {
+                showToastMessage(
+                    'Aplicar uma caixa de diálogo com opção centro de ajuda.');
+              },
+            ),
+            IconButton(
+              icon: const Icon(Iconsax.logout),
+              color: Colors.white,
+              onPressed: () {
+                showToastMessage(
+                    'Aplicar lógica de Logout quando existir a lógica de inicio de sessão.');
+              },
             )
           ],
         ),
@@ -53,14 +70,15 @@ class _AdminHomePageState extends State<AdminHomePage> {
                             physics: ScrollPhysics(),
                             children: [
                               GestureDetector(
-                                child: card('Criar/Editar\n Liga', 0xFF090979,
-                                    0xFF00d4ff, Iconsax.cup),
+                                child: card('Adicionar/Editar\n Liga',
+                                    0xFF090979, 0xFF00d4ff, Iconsax.cup),
                                 onTap: () {
-                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => News(),));
+                                  openActionDialogManageArea('Ligas',
+                                      () => AddLeague(), () => EditLeague());
                                 },
                               ),
                               GestureDetector(
-                                child: card('Criar/Editar\n Jogador',
+                                child: card('Adicionar/Editar\n Jogador',
                                     0xFF090979, 0xFF00d4ff, Iconsax.user),
                                 onTap: () {
                                   showToastMessage(
@@ -216,4 +234,66 @@ class _AdminHomePageState extends State<AdminHomePage> {
         fontSize: 12,
         gravity: ToastGravity.CENTER);
   }
+
+  Future<String?> openActionDialogManageArea(String dialogTitle,
+          Widget Function() createPage, Widget Function() editPage) =>
+      showDialog<String>(
+          context: context,
+          builder: (context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                titlePadding: EdgeInsets.all(20),
+                title: Text(
+                  dialogTitle,
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 18, 18, 18),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20),
+                ),
+                contentPadding:
+                    EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                content: Text('Escolhe uma opção:'),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                          child: SizedBox(
+                            width: 80,
+                            child: Text('Adicionar',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Color.fromARGB(255, 18, 18, 18))),
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => createPage(),
+                                ));
+                          }),
+                      TextButton(
+                          child: SizedBox(
+                            width: 80,
+                            child: Text('Editar',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Color.fromARGB(255, 18, 18, 18))),
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => editPage(),
+                                ));
+                          })
+                    ],
+                  )
+                ],
+              ));
 }

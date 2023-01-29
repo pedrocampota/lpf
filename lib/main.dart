@@ -7,6 +7,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lpf/firebase_options.dart';
 // Pages
 import 'Admin/Home.dart';
+import 'Pages/HomePage.dart';
 import 'Pages/Competitions.dart';
 import 'Pages/Plus.dart';
 
@@ -54,7 +55,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int index = 0;
   final screens = [
-    Center(child: Text('Página Inicial')),
+    HomePage(),
     Center(child: Text('Página dos Jogadores')),
     Competitions(),
     Plus(),
@@ -87,16 +88,16 @@ class _MainPageState extends State<MainPage> {
                   ));
             },
           ),
-          IconButton(
-            icon: const Icon(Iconsax.notification),
-            color: Colors.white,
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Iconsax.search_normal),
-            color: Colors.white,
-            onPressed: () {},
-          )
+          //IconButton(
+          //icon: const Icon(Iconsax.notification),
+          //color: Colors.white,
+          //onPressed: () {},
+          //),
+          //IconButton(
+          //icon: const Icon(Iconsax.search_normal),
+          //color: Colors.white,
+          //onPressed: () {},
+          //)
         ],
       ),
       body: screens[index],
