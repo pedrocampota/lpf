@@ -1,13 +1,21 @@
 // Libraries
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:lpf/firebase_options.dart';
 // Pages
 import 'Pages/Competitions.dart';
 import 'Pages/Plus.dart';
 
 //Actions Classes
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-void main() {
   runApp(const MyApp());
 }
 

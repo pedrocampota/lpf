@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.lpf">
+    package="com.pedroruben.ligaportugal">
    <application
         android:label="Liga Portugal"
         android:name="${applicationName}"

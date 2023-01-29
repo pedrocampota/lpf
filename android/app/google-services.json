@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "365012797790",
+    "project_id": "ligaportugal-16dad",
+    "storage_bucket": "ligaportugal-16dad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365012797790:android:51f553fc0906ed3ca667cf",
+        "android_client_info": {
+          "package_name": "com.pedroruben.ligaportugal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "365012797790-ci6cao5922r2cm0entgl2asj93874gq7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn2tAhFw1lokVYC1MjGMp0XSO9g_5IXn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "365012797790-ci6cao5922r2cm0entgl2asj93874gq7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

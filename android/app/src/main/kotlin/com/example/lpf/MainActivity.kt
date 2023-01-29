@@ -1,4 +1,4 @@
-package com.example.lpf
+package com.pedroruben.ligaportugal
 
 import io.flutter.embedding.android.FlutterActivity
 
