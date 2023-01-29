@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lpf/firebase_options.dart';
 // Pages
+import 'Admin/Home.dart';
 import 'Pages/Competitions.dart';
 import 'Pages/Plus.dart';
 
@@ -26,20 +27,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'LPF',
+      title: 'Liga Portugal',
       theme: ThemeData(
           appBarTheme: AppBarTheme(
-            foregroundColor: Colors.white, //<-- SEE HERE
+            foregroundColor: Colors.white,
           ),
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
           useMaterial3: true,
           colorSchemeSeed: Color.fromARGB(255, 1, 9, 37),
           brightness: Brightness.light),
@@ -53,15 +45,6 @@ class MyApp extends StatelessWidget {
 class MainPage extends StatefulWidget {
   const MainPage({super.key, required this.title});
 
-  /* This widget is the home page of your application. It is stateful, meaning
-   that it has a State object (defined below) that contains fields that affect
-   how it looks.
-
-   This class is the configuration for the state. It holds the values (in this
- case the title) provided by the parent (in this case the App widget) and
-   used by the build method of the State. Fields in a Widget subclass are
-   always marked "final".*/
-
   final String title;
 
   @override
@@ -72,7 +55,7 @@ class _MainPageState extends State<MainPage> {
   int index = 0;
   final screens = [
     Center(child: Text('Página Inicial')),
-    Center(child: Text('Página dos Clubes')),
+    Center(child: Text('Página dos Jogadores')),
     Competitions(),
     Plus(),
   ];
@@ -91,6 +74,19 @@ class _MainPageState extends State<MainPage> {
             color: Colors.white,
             onPressed: () {}),
         actions: [
+          IconButton(
+            icon: const Icon(Iconsax.user),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminHomePage(
+                      title: 'Página de Admin',
+                    ),
+                  ));
+            },
+          ),
           IconButton(
             icon: const Icon(Iconsax.notification),
             color: Colors.white,
@@ -125,7 +121,7 @@ class _MainPageState extends State<MainPage> {
             NavigationDestination(
                 icon: Icon(Iconsax.people),
                 selectedIcon: Icon(Iconsax.people5),
-                label: 'Clubes'),
+                label: 'Jogadores'),
             NavigationDestination(
                 icon: Icon(Iconsax.cup),
                 selectedIcon: Icon(Iconsax.cup5),

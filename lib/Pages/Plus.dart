@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lpf/Screens/News.dart';
 import 'package:lpf/Screens/TableScreen.dart';
 import 'package:lpf/Widgets/LeagueContainer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Plus extends StatelessWidget {
   @override
@@ -32,6 +33,7 @@ class Plus extends StatelessWidget {
                     crossAxisCount: 1,
                     crossAxisSpacing: 15,
                     mainAxisSpacing: 15,
+                    physics: ScrollPhysics(),
                     children: [
                       GestureDetector(
                         child: Card(
@@ -116,13 +118,15 @@ class Plus extends StatelessWidget {
                           ),
                         ),
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TableScreen(
-                                    code: 'PPL',
-                                    leagueName: 'Liga Portugal Bwin'),
-                              ));
+                          Fluttertoast.showToast(
+                              msg:
+                                  "O mercado de transferências está atualmente fechado.",
+                              toastLength: Toast.LENGTH_LONG,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.black,
+                              textColor: Colors.white,
+                              fontSize: 12,
+                              gravity: ToastGravity.CENTER);
                         },
                       ),
                     ],
