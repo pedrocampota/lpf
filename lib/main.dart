@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
           appBarTheme: AppBarTheme(
             foregroundColor: Colors.white,
           ),
+          dividerColor: Colors.transparent,
           useMaterial3: true,
           colorSchemeSeed: Color.fromARGB(255, 1, 9, 37),
           brightness: Brightness.light),
@@ -71,10 +72,10 @@ class _MainPageState extends State<MainPage> {
           height: 110,
           width: 110,
         ),
-        leading: IconButton(
-            icon: const Icon(Iconsax.menu),
-            color: Colors.white,
-            onPressed: () {}),
+        //leading: IconButton(
+        //  icon: const Icon(Iconsax.menu),
+        //color: Colors.white,
+        //onPressed: () {}),
         actions: [
           IconButton(
             icon: const Icon(Iconsax.user),

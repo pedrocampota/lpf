@@ -196,20 +196,16 @@ class _TableScreenState extends State<TableScreen> {
               ),
             ),
             Expanded(
-              child: items.isEmpty
-                  ? const Center(
-                      child: Text('Ocorreu um erro.'),
-                    )
-                  : RefreshIndicator(
-                      onRefresh: refresh,
-                      child: ListView(
-                        physics: const BouncingScrollPhysics(
-                            parent: AlwaysScrollableScrollPhysics()),
-                        children: [
-                          buildTable(),
-                        ],
-                      ),
-                    ),
+              child: RefreshIndicator(
+                onRefresh: refresh,
+                child: ListView(
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  children: [
+                    buildTable(),
+                  ],
+                ),
+              ),
             )
           ],
         ),
@@ -285,40 +281,46 @@ class _TableScreenState extends State<TableScreen> {
             ),
           )));
     }
-    return teams.length == 0
-        ? Center(
-            child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(
-                    left: 15, right: 15, top: 100, bottom: 100),
-                padding: const EdgeInsets.all(25.0),
-                decoration: BoxDecoration(
-                    border:
-                        Border.all(color: Color.fromARGB(255, 193, 216, 255)),
-                    color: Color.fromARGB(255, 255, 255, 255)),
+    return teams.length != 0
+        ? Column(children: teams)
+        : teams.length == 0
+            ? Container(
+                height: MediaQuery.of(context).size.height * 0.5,
+                width: MediaQuery.of(context).size.width,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset('media/images/no_internet.gif',
-                        height: 200, width: 200),
-                    Text('Oops!',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w600)),
-                    Text(
-                        'Não foi possivel realizar a conexão,\n com o servidor.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w300))
-                  ],
+                  children: [CircularProgressIndicator()],
                 ),
               )
-            ],
-          ))
-        : Column(
-            children: teams,
-          );
+            : Center(
+                child: Column(children: [
+                Container(
+                  margin: const EdgeInsets.only(
+                      left: 15, right: 15, top: 100, bottom: 100),
+                  padding: const EdgeInsets.all(25.0),
+                  decoration: BoxDecoration(
+                      border:
+                          Border.all(color: Color.fromARGB(255, 193, 216, 255)),
+                      color: Color.fromARGB(255, 255, 255, 255)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset('media/images/no_internet.gif',
+                          height: 200, width: 200),
+                      Text('Oops!',
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w600)),
+                      Text(
+                          'Não foi possivel realizar a conexão,\n com o servidor.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w300))
+                    ],
+                  ),
+                )
+              ]));
+    ;
   }
 
   Future<String?> openDialogFilter() => showDialog<String>(
