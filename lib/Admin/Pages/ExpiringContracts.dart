@@ -51,7 +51,8 @@ class _ExpiringContractsState extends State<ExpiringContracts> {
   //Function to list players
   Stream<List<Player>> listPlayers() => FirebaseFirestore.instance
       .collection('players')
-      .where('contractDate', isGreaterThanOrEqualTo: '2023-01-01')
+      .orderBy('contractDate') //verificar esta condição
+      .where('contractDate', isGreaterThanOrEqualTo: getSixMonthsAgoDate())
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Player.fromJson(doc.data())).toList());
@@ -60,28 +61,36 @@ class _ExpiringContractsState extends State<ExpiringContracts> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                player.name,
-                style: TextStyle(color: Colors.black, fontSize: 18),
-              ),
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  player.name,
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                )),
+            Text(
+              "A expirar em " +
+                  getDaysMonthsRemainingOfContact(
+                      DateTime.parse(player.contractDate)),
+              style: TextStyle(color: Colors.black, fontSize: 18),
             )
           ],
         ),
       );
 
-  bool compareDates(String date) {
-    // Formatar a data fornecida como um objeto DateTime
+  // Função usada para pegar na data atual e obter a data de 180 dias (6 meses) atrás
+  String getSixMonthsAgoDate() {
+    DateTime now = DateTime.now();
+    DateTime sixMonthsAgo = now.subtract(Duration(days: 180));
+    return DateFormat('yyyy-MM-dd').format(sixMonthsAgo);
+  }
 
-    var providedDate = new DateFormat('yyyy-MM-dd').parse('2021-01-01');
-
-    // Obter a data atual
-    var currentDate = DateTime.now();
-
-    // Calcular a diferença entre as datas em dias
-    var difference = currentDate.difference(providedDate).inDays;
-
-    // Retornar true se a diferença for menor ou igual a 180 dias (6 meses)
-    return difference <= 180;
+  String getDaysMonthsRemainingOfContact(DateTime date) {
+    Duration difference = DateTime.now().difference(date);
+    int months = (difference.inDays / 30).floor();
+    int days = difference.inDays - (months * 30);
+    if (months == 0) {
+      return '$days dias';
+    } else {
+      return '$months meses e $days dias';
+    }
   }
 }
