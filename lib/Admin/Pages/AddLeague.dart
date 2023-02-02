@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lpf/Modal/League.dart';
+import 'package:lpf/Widgets/TitleBar.dart';
 
 //Modal Objects
 import 'package:lpf/Modal/League.dart';
@@ -41,7 +42,11 @@ class _AddLeagueState extends State<AddLeague> {
             Container(
               child: Column(
                 children: [
-                  Text('Informações Gerais'),
+                  TitleBar(
+                      'Informações Necessárias', 0, Iconsax.document_text_1),
+                  SizedBox(
+                    height: 10,
+                  ),
                   TextField(
                     autofocus: false,
                     decoration: InputDecoration(hintText: 'Nome'),

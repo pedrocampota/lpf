@@ -9,6 +9,7 @@ import 'package:lpf/firebase_options.dart';
 import 'Admin/Home.dart';
 import 'Pages/HomePage.dart';
 import 'Pages/Competitions.dart';
+import 'Pages/Players.dart';
 import 'Pages/Plus.dart';
 
 //Actions Classes
@@ -56,7 +57,7 @@ class _MainPageState extends State<MainPage> {
   int index = 0;
   final screens = [
     HomePage(),
-    Center(child: Text('Página dos Jogadores')),
+    Players(),
     Competitions(),
     Plus(),
   ];

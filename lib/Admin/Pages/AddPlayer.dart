@@ -1,9 +1,12 @@
 //Libraries
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
+import 'package:lpf/Widgets/TitleBar.dart';
 
 //Modal Objects
 import 'package:lpf/Modal/Player.dart';
@@ -13,6 +16,13 @@ class AddPlayer extends StatefulWidget {
 
   @override
   State<AddPlayer> createState() => _AddPlayerState();
+}
+
+class DropdownItem {
+  final String teamValue;
+  final String teamName;
+
+  DropdownItem(this.teamValue, this.teamName);
 }
 
 class _AddPlayerState extends State<AddPlayer> {
@@ -26,6 +36,30 @@ class _AddPlayerState extends State<AddPlayer> {
   final contractDaysController = TextEditingController();
   final passportNumberController = TextEditingController();
   bool antidopingBool = true;
+
+  final List<DropdownItem> _teamDropdownItems = [];
+  DropdownItem? _teamSelectedItem;
+  String? teamIdValue;
+
+  String contractDateText = 'Escolher data de contracto';
+  DateTime contractDateValue = DateTime(2023, 01, 01);
+
+  @override
+  void initState() {
+    super.initState();
+    _getDropdownItems();
+  }
+
+  void _getDropdownItems() async {
+    var firestore = FirebaseFirestore.instance;
+    var snapshot = await firestore.collection('teams').get();
+
+    for (var document in snapshot.docs) {
+      _teamDropdownItems
+          .add(DropdownItem(document.data()['id'], document.data()['name']));
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -49,62 +83,149 @@ class _AddPlayerState extends State<AddPlayer> {
               child: ListView(padding: EdgeInsets.all(10), children: [
             Container(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Informações Gerais'),
-                  TextField(
-                    autofocus: false,
-                    decoration: InputDecoration(hintText: 'Nome'),
-                    controller: nameController,
+                  TitleBar(
+                      'Informações Necessárias', 0, Iconsax.document_text_1),
+                  SizedBox(
+                    height: 10,
                   ),
-                  TextField(
-                    autofocus: false,
-                    decoration: InputDecoration(hintText: 'Age - Ex: 23'),
-                    controller: ageController,
-                  ),
-                  TextField(
-                    autofocus: false,
-                    decoration: InputDecoration(
-                        hintText: 'Passport Number - Ex: 11111'),
-                    controller: passportNumberController,
-                  ),
-                  TextField(
-                    autofocus: false,
-                    decoration: InputDecoration(hintText: 'Position - Ex: PL'),
-                    controller: positionController,
-                  ),
-                  TextField(
-                    autofocus: false,
-                    decoration: InputDecoration(hintText: 'Number - Ex: 7'),
-                    controller: numberController,
-                  ),
-                  TextField(
-                    autofocus: false,
-                    decoration: InputDecoration(hintText: 'Contract - Ex: 6'),
-                    controller: contractDaysController,
-                  ),
-                  LiteRollingSwitch(
-                    textOn: "Sim",
-                    textOff: "Não",
-                    value: true,
-                    colorOn: Colors.greenAccent,
-                    colorOff: Colors.redAccent,
-                    iconOn: Icons.done,
-                    iconOff: Icons.remove_circle_outline,
-                    textSize: 16.0,
-                    onChanged: (bool state) {
-                      setState(() {
-                        antidopingBool = state;
-                      });
-                    },
-                    onDoubleTap: () {},
-                    onSwipe: () {},
-                    onTap: () {},
+                  SizedBox(
+                    width: double.infinity,
+                    height: 65,
+                    child: DropdownButtonFormField<DropdownItem>(
+                      //isExpanded: true,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      decoration: InputDecoration(
+                        hintText: 'Escolher equipa...',
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: Color.fromARGB(255, 18, 18, 18))),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: Color.fromARGB(255, 18, 18, 18))),
+                      ),
+                      value: _teamSelectedItem,
+                      items: _teamDropdownItems.map((DropdownItem item) {
+                        return DropdownMenuItem<DropdownItem>(
+                          value: item,
+                          child: Text(item.teamName),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _teamSelectedItem = value!;
+                          teamIdValue = value.teamValue;
+                        });
+                      },
+                    ),
                   ),
                   TextField(
                     autofocus: false,
                     decoration:
-                        InputDecoration(hintText: 'Antidoping days - Ex: 10'),
+                        InputDecoration(hintText: 'Primeiro e último nome'),
+                    controller: nameController,
+                  ),
+                  TextField(
+                    autofocus: false,
+                    decoration: InputDecoration(hintText: 'Idade'),
+                    controller: ageController,
+                  ),
+                  TextField(
+                    autofocus: false,
+                    decoration:
+                        InputDecoration(hintText: 'Número do Passaporte'),
+                    controller: passportNumberController,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(contractDateText),
+                        ElevatedButton(
+                            child: Text('Escolher'),
+                            onPressed: () async {
+                              DateTime? newDate = await showDatePicker(
+                                context: context,
+                                initialDate: contractDateValue,
+                                firstDate: DateTime(2015),
+                                lastDate: DateTime(2050),
+                              );
+
+                              // se 'cancelar' => null
+                              if (newDate == null) return;
+
+                              // se 'ok' => dateTime
+                              setState(() {
+                                contractDateValue = newDate;
+
+                                var originalDateString = DateTime.parse(
+                                    contractDateValue.toString());
+                                final formattedDate = DateFormat('dd/MM/yyyy')
+                                    .format(originalDateString);
+                                contractDateText =
+                                    'Data escolhida: $formattedDate';
+                              });
+                            })
+                      ],
+                    ),
+                  ),
+                  TextField(
+                    autofocus: false,
+                    decoration: InputDecoration(hintText: 'Contrato em Meses'),
+                    controller: contractDaysController,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text('Fez teste antidopping?'),
+                        LiteRollingSwitch(
+                          textOn: "Sim",
+                          textOff: "Não",
+                          value: true,
+                          animationDuration: Duration(milliseconds: 400),
+                          textOnColor: Colors.white,
+                          colorOn: Colors.greenAccent,
+                          colorOff: Colors.redAccent,
+                          iconOn: Icons.done,
+                          iconOff: Icons.remove_circle_outline,
+                          textSize: 16,
+                          onChanged: (bool state) {
+                            setState(() {
+                              antidopingBool = state;
+                            });
+                          },
+                          onDoubleTap: () {},
+                          onSwipe: () {},
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextField(
+                    autofocus: false,
+                    decoration: InputDecoration(hintText: 'Dias de Antidoping'),
                     controller: antidopingDaysController,
+                  ),
+                  TitleBar(
+                      'Informações Opcionais', 20, Iconsax.document_text_1),
+                  TextField(
+                    autofocus: false,
+                    decoration: InputDecoration(hintText: 'Posição'),
+                    controller: positionController,
+                  ),
+                  TextField(
+                    autofocus: false,
+                    decoration: InputDecoration(hintText: 'Número na Camisola'),
+                    controller: numberController,
                   ),
                 ],
               ),
@@ -121,15 +242,21 @@ class _AddPlayerState extends State<AddPlayer> {
             icon: const Icon(
                 color: Color(0xFFFFFFFF), size: 26, Iconsax.add_circle),
             onPressed: () {
+              var originalContractDate =
+                  DateTime.parse(contractDateValue.toString());
+              final finalContractDate =
+                  DateFormat('yyyy-MM-dd').format(originalContractDate);
+
               final name = nameController.text;
               final age = ageController.text;
               final position = positionController.text;
               final number = numberController.text;
               final antidoping = antidopingBool;
-              final antidopingDays = nameController.text;
-              final clubId = '7FjvLsX3YjavXFcU8xT8'; //clubIdController.text;
+              final antidopingDays = antidopingDaysController.text;
+              final contractDate = finalContractDate;
               final contractDays = contractDaysController.text;
               final passportNumber = passportNumberController.text;
+              final teamId = teamIdValue.toString();
 
               createPlayer(
                   name: name,
@@ -138,13 +265,21 @@ class _AddPlayerState extends State<AddPlayer> {
                   number: number,
                   antidoping: antidoping,
                   antidopingDays: antidopingDays,
-                  clubId: clubId,
+                  contractDate: contractDate,
                   contractDays: contractDays,
-                  passportNumber: passportNumber);
+                  passportNumber: passportNumber,
+                  teamId: teamId);
               Navigator.pop(context);
               showToastMessage('Jogador criado com sucesso.');
             }),
       );
+
+  DropdownMenuItem<String> buildMenuItem(String teamValue) => DropdownMenuItem(
+      value: teamValue,
+      child: Text(
+        teamValue,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ));
 
   void showToastMessage(String message) {
     Fluttertoast.showToast(
@@ -165,9 +300,10 @@ class _AddPlayerState extends State<AddPlayer> {
       required String number,
       required bool antidoping,
       required String antidopingDays,
-      required String clubId,
+      required String contractDate,
       required String contractDays,
-      required String passportNumber}) async {
+      required String passportNumber,
+      required String teamId}) async {
     //Reference document to create new player
     final docPlayer = FirebaseFirestore.instance.collection('players').doc();
 
@@ -179,9 +315,10 @@ class _AddPlayerState extends State<AddPlayer> {
         number: number,
         antidoping: antidoping,
         antidopingDays: antidopingDays,
-        clubId: clubId,
+        contractDate: contractDate,
         contractDays: contractDays,
-        passportNumber: passportNumber);
+        passportNumber: passportNumber,
+        teamId: teamId);
     final json = player.toJson();
 
     //Create document and write data to Firebase

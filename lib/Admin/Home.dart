@@ -11,6 +11,8 @@ import 'Pages/AddPlayer.dart';
 import 'Pages/EditPlayer.dart';
 import 'Pages/AddTeam.dart';
 import 'Pages/EditTeam.dart';
+import 'Pages/ExpiringContracts.dart';
+import 'Pages/AntidopingControl.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key, required this.title});
@@ -116,16 +118,24 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                 child: card('Contratos a\n Expirar', 0xFFfd1d1d,
                                     0xFFfcb045, Iconsax.document_text_14),
                                 onTap: () {
-                                  showToastMessage(
-                                      'Não disponivel de momento.');
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ExpiringContracts(),
+                                      ));
                                 },
                               ),
                               GestureDetector(
                                 child: card('Controlo\n Antidoping', 0xFFfd1d1d,
                                     0xFFfcb045, Iconsax.health),
                                 onTap: () {
-                                  showToastMessage(
-                                      'Não disponivel de momento.');
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            AntidopingControl(),
+                                      ));
                                 },
                               )
                             ],
