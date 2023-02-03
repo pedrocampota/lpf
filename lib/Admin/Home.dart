@@ -6,11 +6,11 @@ import 'package:lpf/Admin/Pages/AddLeague.dart';
 
 // Pages
 import 'Pages/AddLeague.dart';
-import 'Pages/EditLeague.dart';
+import 'Pages/ManageLeague.dart';
 import 'Pages/AddPlayer.dart';
-import 'Pages/EditPlayer.dart';
+import 'Pages/ManagePlayer.dart';
 import 'Pages/AddTeam.dart';
-import 'Pages/EditTeam.dart';
+import 'Pages/ManageTeam.dart';
 import 'Pages/ExpiringContracts.dart';
 import 'Pages/AntidopingControl.dart';
 
@@ -42,18 +42,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
               icon: const Icon(Iconsax.more_square),
               color: Colors.white,
               onPressed: () {
-                showToastMessage(
-                    'Aplicar uma caixa de diálogo com opção centro de ajuda.');
+                showToastMessage('Menu de Opções.');
               },
             ),
-            IconButton(
-              icon: const Icon(Iconsax.logout),
-              color: Colors.white,
-              onPressed: () {
-                showToastMessage(
-                    'Aplicar lógica de Logout quando existir a lógica de inicio de sessão.');
-              },
-            )
           ],
         ),
         body: SafeArea(
@@ -75,27 +66,39 @@ class _AdminHomePageState extends State<AdminHomePage> {
                             physics: ScrollPhysics(),
                             children: [
                               GestureDetector(
-                                child: card('Adicionar/Editar\n Liga',
+                                child: card('Adicionar/Gerir\n Liga',
                                     0xFF090979, 0xFF00d4ff, Iconsax.cup),
                                 onTap: () {
-                                  openActionDialogManageArea('Ligas',
-                                      () => AddLeague(), () => EditLeague());
+                                  openActionDialogManageArea(
+                                      'Ligas',
+                                      'Adicionar',
+                                      'Gerir',
+                                      () => AddLeague(),
+                                      () => ManageLeague());
                                 },
                               ),
                               GestureDetector(
-                                child: card('Adicionar/Editar\n Equipa',
+                                child: card('Adicionar/Gerir\n Equipa',
                                     0xFF090979, 0xFF00d4ff, Iconsax.people),
                                 onTap: () {
-                                  openActionDialogManageArea('Equipas',
-                                      () => AddTeam(), () => EditTeam());
+                                  openActionDialogManageArea(
+                                      'Equipas',
+                                      'Adicionar',
+                                      'Gerir',
+                                      () => AddTeam(),
+                                      () => ManageTeam());
                                 },
                               ),
                               GestureDetector(
-                                child: card('Adicionar/Editar\n Jogador',
+                                child: card('Adicionar/Gerir\n Jogador',
                                     0xFF090979, 0xFF00d4ff, Iconsax.user),
                                 onTap: () {
-                                  openActionDialogManageArea('Jogadores',
-                                      () => AddPlayer(), () => EditPlayer());
+                                  openActionDialogManageArea(
+                                      'Jogadores',
+                                      'Adicionar',
+                                      'Gerir',
+                                      () => AddPlayer(),
+                                      () => ManagePlayer());
                                 },
                               )
                             ],
@@ -245,6 +248,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  //Mostrar mensagem toast
   void showToastMessage(String message) {
     Fluttertoast.showToast(
         msg: message,
@@ -256,8 +260,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
         gravity: ToastGravity.CENTER);
   }
 
-  Future<String?> openActionDialogManageArea(String dialogTitle,
-          Widget Function() createPage, Widget Function() editPage) =>
+  Future<String?> openActionDialogManageArea(
+          String dialogTitle,
+          String firstActionText,
+          String secondActionText,
+          Widget Function() createPage,
+          Widget Function() editPage) =>
       showDialog<String>(
           context: context,
           builder: (context) => AlertDialog(
@@ -282,7 +290,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       TextButton(
                           child: SizedBox(
                             width: 80,
-                            child: Text('Adicionar',
+                            child: Text(firstActionText,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white)),
                           ),
@@ -299,7 +307,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       TextButton(
                           child: SizedBox(
                             width: 80,
-                            child: Text('Editar',
+                            child: Text(secondActionText,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white)),
                           ),

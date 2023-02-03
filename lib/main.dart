@@ -7,7 +7,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lpf/firebase_options.dart';
 // Pages
 import 'Admin/Home.dart';
-import 'Pages/HomePage.dart';
 import 'Pages/Competitions.dart';
 import 'Pages/Players.dart';
 import 'Pages/Plus.dart';
@@ -57,7 +56,6 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int index = 0;
   final screens = [
-    HomePage(),
     Players(),
     Competitions(),
     Plus(),
@@ -117,10 +115,6 @@ class _MainPageState extends State<MainPage> {
           labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           animationDuration: Duration(seconds: 1),
           destinations: [
-            NavigationDestination(
-                icon: Icon(Iconsax.home),
-                selectedIcon: Icon(Iconsax.home5),
-                label: 'Ínicio'),
             NavigationDestination(
                 icon: Icon(Iconsax.people),
                 selectedIcon: Icon(Iconsax.people5),

@@ -8,10 +8,9 @@ import 'package:intl/intl.dart';
 import 'package:iconsax/iconsax.dart';
 
 class News extends StatefulWidget {
-  //
   News() : super();
 
-  final String title = 'RSS Feed Demo';
+  final String title = 'A acontecer agora';
 
   @override
   NewsState createState() => NewsState();
@@ -21,9 +20,9 @@ class NewsState extends State<News> {
   static const String FEED_URL = 'https://www.record.pt/rss';
   RssFeed? _feed;
   String? _title;
-  static const String loadingFeedMsg = 'Loading Feed...';
-  static const String feedLoadErrorMsg = 'Error Loading Feed.';
-  static const String feedOpenErrorMsg = 'Error Opening Feed.';
+  static const String loadingFeedMsg = 'A carregar feed...';
+  static const String feedLoadErrorMsg = 'Erro ao carregar o Feed.';
+  static const String feedOpenErrorMsg = 'Erro ao abrir o Feed.';
   static const String placeholderImg =
       'media/images/background_placeholder.png';
   GlobalKey<RefreshIndicatorState>? _refreshKey;
@@ -219,7 +218,7 @@ class NewsState extends State<News> {
             }),
         actions: [
           IconButton(
-            icon: const Icon(Iconsax.menu_1),
+            icon: const Icon(Iconsax.global),
             color: Colors.white,
             onPressed: () async {
               const url = "https://www.record.pt/";

@@ -16,6 +16,8 @@ class AntidopingControl extends StatefulWidget {
 }
 
 class _AntidopingControlState extends State<AntidopingControl> {
+  bool _firstExpansionTileExpanded = false;
+
   Color mainColor = Color.fromARGB(255, 18, 18, 18);
 
   late TextEditingController numDaysController;
@@ -52,6 +54,7 @@ class _AntidopingControlState extends State<AntidopingControl> {
           actions: [],
         ),
         body: Container(
+          color: Colors.grey.shade100,
           height: double.infinity,
           child: Column(
             children: [
@@ -132,121 +135,185 @@ class _AntidopingControlState extends State<AntidopingControl> {
                         final key = groups.keys.elementAt(index);
                         final group = groups[key];
 
-                        return ExpansionTile(
-                          iconColor: Colors.black,
-                          collapsedIconColor: Colors.black,
-                          collapsedBackgroundColor: Colors.white,
-                          collapsedTextColor: Colors.black,
-                          tilePadding: EdgeInsets.only(
-                              top: 8, bottom: 8, left: 10, right: 10),
-                          backgroundColor: Colors.white,
-                          title: FutureBuilder<String>(
-                            future: getPlayerTeamName(key),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<String> snapshot) {
-                              if (snapshot.hasData) {
-                                if (snapshot.data!.length == 0) {
-                                  return Text("Sem resultados");
-                                } else {
-                                  // Aqui você pode trabalhar com os dados do snapshot
-                                  return Text(
-                                    '${snapshot.data} (${group!.length})',
-                                    style: TextStyle(
-                                      color: mainColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  );
-                                }
-                              } else if (snapshot.hasError) {
-                                return Text('Erro: ${snapshot.error}');
-                              } else {
-                                return Text('${group!.length}');
-                              }
-                            },
-                          ),
-                          children: group!
-                              .where((e) => e["teamId"] == e["teamId"])
-                              .map((e) => Container(
-                                    width: double.infinity,
-                                    child: Card(
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      elevation: 0.7,
-                                      margin: EdgeInsets.all(10),
-                                      child: Container(
-                                        padding: EdgeInsets.all(10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                    width: 80,
-                                                    child: CircleAvatar(
-                                                      radius:
-                                                          50, // Image radius
-                                                      backgroundImage: NetworkImage(
-                                                          'https://i.pravatar.cc/300'),
-                                                    )),
-                                                SizedBox(width: 10),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      e["name"],
-                                                      style: TextStyle(
-                                                          color: mainColor,
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                    SafeArea(
-                                                        child: Row(
-                                                      children: [
-                                                        Text(
-                                                          "Data do último exame feito:",
-                                                          style: TextStyle(
-                                                              color: mainColor,
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 2,
-                                                        ),
-                                                        Text(
-                                                          getFormatedDate(
-                                                              DateTime.parse(e[
-                                                                  "antidopingDate"])),
-                                                          style: TextStyle(
-                                                              color: mainColor,
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400),
-                                                        ),
-                                                      ],
-                                                    )),
-                                                  ],
-                                                )
-                                              ],
+                        return Container(
+                            padding: EdgeInsets.all(10),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: ExpansionTile(
+                                iconColor: Colors.black,
+                                collapsedIconColor: Colors.black,
+                                collapsedBackgroundColor: Colors.white,
+                                collapsedTextColor: Colors.black,
+                                tilePadding: EdgeInsets.only(
+                                    top: 8, bottom: 8, left: 10, right: 10),
+                                backgroundColor: Colors.white,
+                                title: FutureBuilder<String>(
+                                  future: getPlayerTeamName(key),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<String> snapshot) {
+                                    if (snapshot.hasData) {
+                                      if (snapshot.data!.length == 0) {
+                                        return Text("Sem resultados");
+                                      } else {
+                                        return Text(
+                                          '${snapshot.data} (${group!.length})',
+                                          style: TextStyle(
+                                            color: mainColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        );
+                                      }
+                                    } else if (snapshot.hasError) {
+                                      return Text('Erro: ${snapshot.error}');
+                                    } else {
+                                      return Text('${group!.length}');
+                                    }
+                                  },
+                                ),
+                                children: group!
+                                    .where((e) => e["teamId"] == e["teamId"])
+                                    .map((e) => Container(
+                                          width: double.infinity,
+                                          child: Card(
+                                            shadowColor: Color.fromARGB(
+                                                46, 255, 255, 255),
+                                            color: Colors.grey.shade50,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ))
-                              .toList(),
-                        );
+                                            elevation: 0.5,
+                                            margin: EdgeInsets.all(10),
+                                            child: Container(
+                                              padding: EdgeInsets.all(10),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                          width: 80,
+                                                          child: CircleAvatar(
+                                                            radius:
+                                                                50, // Image radius
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                                    'https://i.pravatar.cc/300'),
+                                                          )),
+                                                      SizedBox(width: 10),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            e["name"],
+                                                            style: TextStyle(
+                                                                color:
+                                                                    mainColor,
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                          SafeArea(
+                                                              child: Row(
+                                                            children: [
+                                                              Text(
+                                                                "Último exame feito:",
+                                                                style: TextStyle(
+                                                                    color:
+                                                                        mainColor,
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 2,
+                                                              ),
+                                                              Text(
+                                                                getFormatedDate(
+                                                                    DateTime.parse(
+                                                                        e["antidopingDate"])),
+                                                                style: TextStyle(
+                                                                    color:
+                                                                        mainColor,
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400),
+                                                              ),
+                                                            ],
+                                                          )),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                "Feito á: ",
+                                                                style: TextStyle(
+                                                                    color:
+                                                                        mainColor,
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300),
+                                                              ),
+                                                              Text(
+                                                                getExamedDays(
+                                                                    DateTime.parse(
+                                                                        e["antidopingDate"])),
+                                                                style: TextStyle(
+                                                                    color:
+                                                                        mainColor,
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400),
+                                                              ),
+                                                              Text(
+                                                                " dias",
+                                                                style: TextStyle(
+                                                                    color:
+                                                                        mainColor,
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ))
+                                    .toList(),
+                                initiallyExpanded:
+                                    index == 0 && !_firstExpansionTileExpanded,
+                                onExpansionChanged: (value) {
+                                  if (index == 0) {
+                                    setState(() {
+                                      _firstExpansionTileExpanded = true;
+                                    });
+                                  }
+                                },
+                              ),
+                            ));
                       },
                     );
                   },
@@ -355,5 +422,11 @@ class _AntidopingControlState extends State<AntidopingControl> {
   getFormatedDate(DateTime date) {
     var initialDate = DateTime.parse(date.toString());
     return DateFormat('dd/MM/yyyy').format(initialDate);
+  }
+
+  // Função usada para pegar na data atual e obter a data de 180 dias (6 meses) para a trás
+  String getExamedDays(DateTime date) {
+    var difference = DateTime.now().difference(date).inDays;
+    return difference.toString();
   }
 }

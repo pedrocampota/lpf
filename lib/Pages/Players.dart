@@ -49,6 +49,8 @@ class Players extends StatelessWidget {
                         final players = snapshot.data!;
 
                         return ListView(
+                          physics: const BouncingScrollPhysics(
+                              parent: AlwaysScrollableScrollPhysics()),
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           children: players.map(buildPlayers).toList(),
                         );

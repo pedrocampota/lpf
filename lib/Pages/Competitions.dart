@@ -91,7 +91,7 @@ class Competitions extends StatelessWidget {
 
   void showToastMessage(String leagueName) {
     Fluttertoast.showToast(
-        msg: "A " + leagueName + " estará disponivel.",
+        msg: "A " + leagueName + " estará disponivel em breve.",
         toastLength: Toast.LENGTH_SHORT,
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.black,

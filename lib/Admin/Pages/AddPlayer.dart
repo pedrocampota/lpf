@@ -26,6 +26,9 @@ class DropdownItem {
 }
 
 class _AddPlayerState extends State<AddPlayer> {
+  Color mainColor = Color.fromARGB(255, 18, 18, 18);
+  Color secondaryColor = Colors.blue.shade400;
+
   final nameController = TextEditingController();
   final ageController = TextEditingController();
   final positionController = TextEditingController();
@@ -41,11 +44,13 @@ class _AddPlayerState extends State<AddPlayer> {
   DropdownItem? _teamSelectedItem;
   String? teamIdValue;
 
-  String contractDateText = 'Escolher data de contracto';
+  String contractDateText = 'Data de ínicio de contracto';
   DateTime contractDateValue = DateTime(2023, 01, 01);
-  String contractExpiringDateValue = '';
-  String antidopingDateText = 'Escolher data do exame';
+  String contractExpiringDateText = 'Data de fim de contracto';
+  DateTime contractExpiringDateValue = DateTime(2024, 01, 01);
+  String antidopingDateText = 'Data do exame';
   DateTime antidopingDateValue = DateTime(2023, 01, 01);
+  String choosedDateContractText = 'Escolher';
 
   @override
   void initState() {
@@ -93,11 +98,9 @@ class _AddPlayerState extends State<AddPlayer> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TitleBar('Informações Necessárias', 0,
-                          Iconsax.document_text_1),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      TitleBar(
+                          'Informações Principais', 0, Iconsax.document_text_1),
+                      SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
                         height: 65,
@@ -105,16 +108,16 @@ class _AddPlayerState extends State<AddPlayer> {
                           //isExpanded: true,
                           style: Theme.of(context).textTheme.bodyMedium,
                           decoration: InputDecoration(
-                            hintText: 'Escolher equipa...',
+                            hintText: 'Selecionar equipa',
                             enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(5),
                                 borderSide: BorderSide(
-                                    width: 1,
+                                    width: 0.5,
                                     color: Color.fromARGB(255, 18, 18, 18))),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(5),
                                 borderSide: BorderSide(
-                                    width: 1,
+                                    width: 0.5,
                                     color: Color.fromARGB(255, 18, 18, 18))),
                           ),
                           value: _teamSelectedItem,
@@ -132,63 +135,141 @@ class _AddPlayerState extends State<AddPlayer> {
                           },
                         ),
                       ),
-                      TextField(
+                      SizedBox(height: 25),
+                      TextFormField(
+                        validator: validateInputs,
                         autofocus: false,
                         decoration:
-                            InputDecoration(hintText: 'Primeiro e último nome'),
+                            getInputDecoration('Primeiro e Último Nome'),
                         controller: nameController,
+                        maxLines: 1,
                       ),
-                      TextField(
+                      SizedBox(height: 20),
+                      TextFormField(
+                        validator: validateInputs,
                         autofocus: false,
-                        decoration: InputDecoration(hintText: 'Idade'),
+                        decoration: getInputDecoration('Idade'),
                         controller: ageController,
+                        maxLines: 1,
+                        maxLength: 2,
                       ),
-                      TextField(
+                      SizedBox(height: 10),
+                      TextFormField(
+                        validator: validateInputs,
                         autofocus: false,
-                        decoration:
-                            InputDecoration(hintText: 'Número do Passaporte'),
+                        decoration: getInputDecoration('Número do Passaporte'),
                         controller: passportNumberController,
+                        maxLines: 1,
                       ),
                       Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(contractDateText),
-                            ElevatedButton(
-                                child: Text('Escolher'),
-                                onPressed: () async {
-                                  DateTime? newDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: contractDateValue,
-                                    firstDate: DateTime(2015),
-                                    lastDate: DateTime(2050),
-                                  );
+                          padding: EdgeInsets.only(top: 10, bottom: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TitleBar('Informações Contratuais', 20,
+                                  Iconsax.document_text_1),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(contractDateText),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: secondaryColor,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 25, vertical: 15),
+                                      ),
+                                      child: Text(choosedDateContractText,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          )),
+                                      onPressed: () async {
+                                        DateTime? newDate =
+                                            await showDatePicker(
+                                          context: context,
+                                          initialDate: contractDateValue,
+                                          firstDate: DateTime(2015),
+                                          lastDate: DateTime(2050),
+                                        );
 
-                                  // se 'cancelar' => null
-                                  if (newDate == null) return;
+                                        // se 'cancelar' => null
+                                        if (newDate == null) return;
 
-                                  // se 'ok' => dateTime
-                                  setState(() {
-                                    contractDateValue = newDate;
+                                        // se 'ok' => dateTime
+                                        setState(() {
+                                          contractDateValue = newDate;
+                                          choosedDateContractText = 'Escolhida';
+                                          var originalDateString =
+                                              DateTime.parse(
+                                                  contractDateValue.toString());
+                                          final formattedDate =
+                                              DateFormat('dd/MM/yyyy')
+                                                  .format(originalDateString);
+                                          contractDateText =
+                                              'Data de Ínicio: $formattedDate';
+                                        });
+                                      })
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(contractExpiringDateText),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: secondaryColor,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 25, vertical: 15),
+                                      ),
+                                      child: Text(choosedDateContractText,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          )),
+                                      onPressed: () async {
+                                        DateTime? newDate =
+                                            await showDatePicker(
+                                          context: context,
+                                          initialDate:
+                                              contractExpiringDateValue,
+                                          firstDate: DateTime(2015),
+                                          lastDate: DateTime(2050),
+                                        );
 
-                                    var originalDateString = DateTime.parse(
-                                        contractDateValue.toString());
-                                    final formattedDate =
-                                        DateFormat('dd/MM/yyyy')
-                                            .format(originalDateString);
-                                    contractDateText =
-                                        'Data escolhida: $formattedDate';
-                                  });
-                                })
-                          ],
-                        ),
-                      ),
-                      TextField(
-                        autofocus: false,
-                        decoration:
-                            InputDecoration(hintText: 'Contrato em Meses'),
-                        controller: contractDurationController,
+                                        // se 'cancelar' => null
+                                        if (newDate == null) return;
+
+                                        // se 'ok' => dateTime
+                                        setState(() {
+                                          contractExpiringDateValue = newDate;
+                                          choosedDateContractText = 'Escolhida';
+
+                                          var originalDateString =
+                                              DateTime.parse(
+                                                  contractExpiringDateValue
+                                                      .toString());
+                                          final formattedDate =
+                                              DateFormat('dd/MM/yyyy')
+                                                  .format(originalDateString);
+                                          contractExpiringDateText =
+                                              'Data de Fim: $formattedDate';
+                                        });
+                                      })
+                                ],
+                              ),
+                            ],
+                          )),
+                      TitleBar('Informações Médicas', 0, Iconsax.health),
+                      SizedBox(
+                        height: 10,
                       ),
                       Container(
                           padding: EdgeInsets.only(top: 20, bottom: 10),
@@ -196,7 +277,7 @@ class _AddPlayerState extends State<AddPlayer> {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text('Fez teste antidopping?'),
                                   LiteRollingSwitch(
@@ -225,11 +306,20 @@ class _AddPlayerState extends State<AddPlayer> {
                               SizedBox(height: 15),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(antidopingDateText),
                                   ElevatedButton(
-                                      child: Text('Escolher'),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: secondaryColor,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 25, vertical: 15),
+                                      ),
+                                      child: Text(choosedDateContractText,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          )),
                                       onPressed: () async {
                                         DateTime? newDate =
                                             await showDatePicker(
@@ -245,7 +335,7 @@ class _AddPlayerState extends State<AddPlayer> {
                                         // se 'ok' => dateTime
                                         setState(() {
                                           antidopingDateValue = newDate;
-
+                                          choosedDateContractText = 'Escolhida';
                                           var originalDateString =
                                               DateTime.parse(antidopingDateValue
                                                   .toString());
@@ -253,35 +343,39 @@ class _AddPlayerState extends State<AddPlayer> {
                                               DateFormat('dd/MM/yyyy')
                                                   .format(originalDateString);
                                           antidopingDateText =
-                                              'Data escolhida: $formattedDate';
+                                              'Data do exame: $formattedDate';
                                         });
                                       })
                                 ],
                               ),
                             ],
                           )),
-                      TextField(
-                        autofocus: false,
-                        decoration:
-                            InputDecoration(hintText: 'Dias de Antidoping'),
-                        controller: antidopingDaysController,
-                      ),
                       Padding(
                         padding: EdgeInsets.only(bottom: 60),
                         child: Column(
                           children: [
                             TitleBar('Informações Opcionais', 20,
                                 Iconsax.document_text_1),
-                            TextField(
+                            SizedBox(height: 20),
+                            TextFormField(
+                              validator: validateInputs,
                               autofocus: false,
-                              decoration: InputDecoration(hintText: 'Posição'),
+                              decoration: getInputDecoration('Posição'),
                               controller: positionController,
+                              maxLength: 3,
+                              maxLines: 1,
+                              keyboardType: TextInputType.text,
                             ),
-                            TextField(
+                            SizedBox(height: 10),
+                            TextFormField(
+                              validator: validateInputs,
                               autofocus: false,
-                              decoration: InputDecoration(
-                                  hintText: 'Número na Camisola'),
+                              decoration:
+                                  getInputDecoration('Número na Camisola'),
                               controller: numberController,
+                              maxLength: 2,
+                              maxLines: 1,
+                              keyboardType: TextInputType.number,
                             ),
                           ],
                         ),
@@ -313,12 +407,8 @@ class _AddPlayerState extends State<AddPlayer> {
               final finalContractDate =
                   DateFormat('yyyy-MM-dd').format(originalContractDate);
               //Data de expiração de contrato
-              var contractDurationValue =
-                  monthsToDays(int.parse(contractDurationController.text));
-
-              DateTime originalContractExpiringDate = originalContractDate
-                  .add(Duration(days: contractDurationValue));
-
+              var originalContractExpiringDate =
+                  DateTime.parse(contractExpiringDateValue.toString());
               final finalContractExpiringDate =
                   DateFormat('yyyy-MM-dd').format(originalContractExpiringDate);
 
@@ -413,5 +503,34 @@ class _AddPlayerState extends State<AddPlayer> {
 
     //Create document and write data to Firebase
     await docPlayer.set(json);
+  }
+
+  String? validateInputs(value) {
+    if (value.isEmpty) {
+      return 'Campo obrigatório';
+    }
+    return null;
+  }
+
+  getInputDecoration(String labelText) {
+    return InputDecoration(
+      contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      labelText: labelText,
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          color: mainColor,
+          width: 0.5,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: mainColor,
+          width: 1,
+        ),
+      ),
+    );
   }
 }
