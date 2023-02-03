@@ -38,11 +38,10 @@ class _ExpiringContractsState extends State<ExpiringContracts> {
         body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection("players")
-              .orderBy('contractDate',
+              .orderBy('contractExpiringDate',
                   descending:
-                      true) // a obter de forma que mostre primeiro os jogados que estão com menos tempo restante de contrato
-              .where('contractDate',
-                  isGreaterThanOrEqualTo: getSixMonthsAgoDate())
+                      false) // a obter de forma que mostre primeiro os jogados que estão com menos tempo restante de contrato
+              .where('contractExpiringDate', isLessThan: getSixMonthsInFutureDate())
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -61,7 +60,6 @@ class _ExpiringContractsState extends State<ExpiringContracts> {
                 final group = groups[key];
 
                 return ExpansionTile(
-                  
                   iconColor: Colors.black,
                   collapsedIconColor: Colors.black,
                   collapsedBackgroundColor: Colors.white,
@@ -130,7 +128,7 @@ class _ExpiringContractsState extends State<ExpiringContracts> {
                                                   fontWeight: FontWeight.w500),
                                             ),
                                             Text(
-                                              "Assinado em: " +
+                                              "Assinou em: " +
                                                   getFormatedDate(
                                                       DateTime.parse(
                                                           e["contractDate"])),
@@ -146,8 +144,8 @@ class _ExpiringContractsState extends State<ExpiringContracts> {
                                               padding: EdgeInsets.all(7),
                                               child: Text(
                                                 getDaysMonthsRemainingOfContact(
-                                                    DateTime.parse(
-                                                        e['contractDate'])),
+                                                    DateTime.parse(e[
+                                                        'contractExpiringDate'])),
                                                 style: TextStyle(
                                                     color: mainColor,
                                                     fontSize: 14),
@@ -155,10 +153,9 @@ class _ExpiringContractsState extends State<ExpiringContracts> {
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                color:
-                                                    showContractExpiringWarning(
-                                                        DateTime.parse(
-                                                            e['contractDate'])),
+                                                color: showContractExpiringWarning(
+                                                    DateTime.parse(e[
+                                                        'contractExpiringDate'])),
                                               ),
                                             ),
                                           ],
@@ -199,16 +196,16 @@ class _ExpiringContractsState extends State<ExpiringContracts> {
     return documentSnapshot.get('name');
   }
 
-  // Função usada para pegar na data atual e obter a data de 180 dias (6 meses) atrás
-  String getSixMonthsAgoDate() {
+  // Função usada para pegar na data atual e obter a data de 180 dias (6 meses) para a frente
+  String getSixMonthsInFutureDate() {
     DateTime now = DateTime.now();
-    DateTime sixMonthsAgo = now.subtract(Duration(days: 180));
+    DateTime sixMonthsAgo = now.add(Duration(days: 180));
     return DateFormat('yyyy-MM-dd').format(sixMonthsAgo);
   }
 
   // Função para obter os dias/meses restantes
   String getDaysMonthsRemainingOfContact(DateTime date) {
-    Duration difference = DateTime.now().difference(date);
+    Duration difference = date.difference(DateTime.now());
     int months = (difference.inDays / 30).floor();
     int days = difference.inDays - (months * 30);
     String monthString = 'meses';
@@ -235,7 +232,7 @@ class _ExpiringContractsState extends State<ExpiringContracts> {
 
   // Função para obter os dias/meses restantes
   showContractExpiringWarning(DateTime date) {
-    Duration difference = DateTime.now().difference(date);
+    Duration difference = date.difference(DateTime.now());
     int months = (difference.inDays / 30).floor();
     int days = difference.inDays - (months * 30);
 
@@ -250,6 +247,7 @@ class _ExpiringContractsState extends State<ExpiringContracts> {
     }
   }
 
+  // Formatar data para a desejada
   getFormatedDate(DateTime date) {
     var initialDate = DateTime.parse(date.toString());
     return DateFormat('dd/MM/yyyy').format(initialDate);

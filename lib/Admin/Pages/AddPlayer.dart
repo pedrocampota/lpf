@@ -33,7 +33,7 @@ class _AddPlayerState extends State<AddPlayer> {
   final antidopingController = TextEditingController();
   final antidopingDaysController = TextEditingController();
   final clubIdController = TextEditingController();
-  final contractDaysController = TextEditingController();
+  final contractDurationController = TextEditingController();
   final passportNumberController = TextEditingController();
   bool antidopingBool = true;
 
@@ -43,6 +43,9 @@ class _AddPlayerState extends State<AddPlayer> {
 
   String contractDateText = 'Escolher data de contracto';
   DateTime contractDateValue = DateTime(2023, 01, 01);
+  String contractExpiringDateValue = '';
+  String antidopingDateText = 'Escolher data do exame';
+  DateTime antidopingDateValue = DateTime(2023, 01, 01);
 
   @override
   void initState() {
@@ -80,157 +83,213 @@ class _AddPlayerState extends State<AddPlayer> {
         body: SafeArea(
             child: Column(children: [
           Expanded(
-              child: ListView(padding: EdgeInsets.all(10), children: [
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TitleBar(
-                      'Informações Necessárias', 0, Iconsax.document_text_1),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 65,
-                    child: DropdownButtonFormField<DropdownItem>(
-                      //isExpanded: true,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      decoration: InputDecoration(
-                        hintText: 'Escolher equipa...',
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                width: 1,
-                                color: Color.fromARGB(255, 18, 18, 18))),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                width: 1,
-                                color: Color.fromARGB(255, 18, 18, 18))),
+              child: ListView(
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  padding: EdgeInsets.all(10),
+                  children: [
+                Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TitleBar('Informações Necessárias', 0,
+                          Iconsax.document_text_1),
+                      SizedBox(
+                        height: 10,
                       ),
-                      value: _teamSelectedItem,
-                      items: _teamDropdownItems.map((DropdownItem item) {
-                        return DropdownMenuItem<DropdownItem>(
-                          value: item,
-                          child: Text(item.teamName),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _teamSelectedItem = value!;
-                          teamIdValue = value.teamValue;
-                        });
-                      },
-                    ),
-                  ),
-                  TextField(
-                    autofocus: false,
-                    decoration:
-                        InputDecoration(hintText: 'Primeiro e último nome'),
-                    controller: nameController,
-                  ),
-                  TextField(
-                    autofocus: false,
-                    decoration: InputDecoration(hintText: 'Idade'),
-                    controller: ageController,
-                  ),
-                  TextField(
-                    autofocus: false,
-                    decoration:
-                        InputDecoration(hintText: 'Número do Passaporte'),
-                    controller: passportNumberController,
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20, bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(contractDateText),
-                        ElevatedButton(
-                            child: Text('Escolher'),
-                            onPressed: () async {
-                              DateTime? newDate = await showDatePicker(
-                                context: context,
-                                initialDate: contractDateValue,
-                                firstDate: DateTime(2015),
-                                lastDate: DateTime(2050),
-                              );
-
-                              // se 'cancelar' => null
-                              if (newDate == null) return;
-
-                              // se 'ok' => dateTime
-                              setState(() {
-                                contractDateValue = newDate;
-
-                                var originalDateString = DateTime.parse(
-                                    contractDateValue.toString());
-                                final formattedDate = DateFormat('dd/MM/yyyy')
-                                    .format(originalDateString);
-                                contractDateText =
-                                    'Data escolhida: $formattedDate';
-                              });
-                            })
-                      ],
-                    ),
-                  ),
-                  TextField(
-                    autofocus: false,
-                    decoration: InputDecoration(hintText: 'Contrato em Meses'),
-                    controller: contractDaysController,
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20, bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text('Fez teste antidopping?'),
-                        LiteRollingSwitch(
-                          textOn: "Sim",
-                          textOff: "Não",
-                          value: true,
-                          animationDuration: Duration(milliseconds: 400),
-                          textOnColor: Colors.white,
-                          colorOn: Colors.greenAccent,
-                          colorOff: Colors.redAccent,
-                          iconOn: Icons.done,
-                          iconOff: Icons.remove_circle_outline,
-                          textSize: 16,
-                          onChanged: (bool state) {
+                      SizedBox(
+                        width: double.infinity,
+                        height: 65,
+                        child: DropdownButtonFormField<DropdownItem>(
+                          //isExpanded: true,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          decoration: InputDecoration(
+                            hintText: 'Escolher equipa...',
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Color.fromARGB(255, 18, 18, 18))),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Color.fromARGB(255, 18, 18, 18))),
+                          ),
+                          value: _teamSelectedItem,
+                          items: _teamDropdownItems.map((DropdownItem item) {
+                            return DropdownMenuItem<DropdownItem>(
+                              value: item,
+                              child: Text(item.teamName),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
                             setState(() {
-                              antidopingBool = state;
+                              _teamSelectedItem = value!;
+                              teamIdValue = value.teamValue;
                             });
                           },
-                          onDoubleTap: () {},
-                          onSwipe: () {},
-                          onTap: () {},
                         ),
-                      ],
-                    ),
+                      ),
+                      TextField(
+                        autofocus: false,
+                        decoration:
+                            InputDecoration(hintText: 'Primeiro e último nome'),
+                        controller: nameController,
+                      ),
+                      TextField(
+                        autofocus: false,
+                        decoration: InputDecoration(hintText: 'Idade'),
+                        controller: ageController,
+                      ),
+                      TextField(
+                        autofocus: false,
+                        decoration:
+                            InputDecoration(hintText: 'Número do Passaporte'),
+                        controller: passportNumberController,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 20, bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(contractDateText),
+                            ElevatedButton(
+                                child: Text('Escolher'),
+                                onPressed: () async {
+                                  DateTime? newDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: contractDateValue,
+                                    firstDate: DateTime(2015),
+                                    lastDate: DateTime(2050),
+                                  );
+
+                                  // se 'cancelar' => null
+                                  if (newDate == null) return;
+
+                                  // se 'ok' => dateTime
+                                  setState(() {
+                                    contractDateValue = newDate;
+
+                                    var originalDateString = DateTime.parse(
+                                        contractDateValue.toString());
+                                    final formattedDate =
+                                        DateFormat('dd/MM/yyyy')
+                                            .format(originalDateString);
+                                    contractDateText =
+                                        'Data escolhida: $formattedDate';
+                                  });
+                                })
+                          ],
+                        ),
+                      ),
+                      TextField(
+                        autofocus: false,
+                        decoration:
+                            InputDecoration(hintText: 'Contrato em Meses'),
+                        controller: contractDurationController,
+                      ),
+                      Container(
+                          padding: EdgeInsets.only(top: 20, bottom: 10),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text('Fez teste antidopping?'),
+                                  LiteRollingSwitch(
+                                    textOn: "Sim",
+                                    textOff: "Não",
+                                    value: true,
+                                    animationDuration:
+                                        Duration(milliseconds: 400),
+                                    textOnColor: Colors.white,
+                                    colorOn: Colors.greenAccent,
+                                    colorOff: Colors.redAccent,
+                                    iconOn: Icons.done,
+                                    iconOff: Icons.remove_circle_outline,
+                                    textSize: 16,
+                                    onChanged: (bool state) {
+                                      setState(() {
+                                        antidopingBool = state;
+                                      });
+                                    },
+                                    onDoubleTap: () {},
+                                    onSwipe: () {},
+                                    onTap: () {},
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 15),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(antidopingDateText),
+                                  ElevatedButton(
+                                      child: Text('Escolher'),
+                                      onPressed: () async {
+                                        DateTime? newDate =
+                                            await showDatePicker(
+                                          context: context,
+                                          initialDate: antidopingDateValue,
+                                          firstDate: DateTime(2015),
+                                          lastDate: DateTime(2050),
+                                        );
+
+                                        // se 'cancelar' => null
+                                        if (newDate == null) return;
+
+                                        // se 'ok' => dateTime
+                                        setState(() {
+                                          antidopingDateValue = newDate;
+
+                                          var originalDateString =
+                                              DateTime.parse(antidopingDateValue
+                                                  .toString());
+                                          final formattedDate =
+                                              DateFormat('dd/MM/yyyy')
+                                                  .format(originalDateString);
+                                          antidopingDateText =
+                                              'Data escolhida: $formattedDate';
+                                        });
+                                      })
+                                ],
+                              ),
+                            ],
+                          )),
+                      TextField(
+                        autofocus: false,
+                        decoration:
+                            InputDecoration(hintText: 'Dias de Antidoping'),
+                        controller: antidopingDaysController,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 60),
+                        child: Column(
+                          children: [
+                            TitleBar('Informações Opcionais', 20,
+                                Iconsax.document_text_1),
+                            TextField(
+                              autofocus: false,
+                              decoration: InputDecoration(hintText: 'Posição'),
+                              controller: positionController,
+                            ),
+                            TextField(
+                              autofocus: false,
+                              decoration: InputDecoration(
+                                  hintText: 'Número na Camisola'),
+                              controller: numberController,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                  TextField(
-                    autofocus: false,
-                    decoration: InputDecoration(hintText: 'Dias de Antidoping'),
-                    controller: antidopingDaysController,
-                  ),
-                  TitleBar(
-                      'Informações Opcionais', 20, Iconsax.document_text_1),
-                  TextField(
-                    autofocus: false,
-                    decoration: InputDecoration(hintText: 'Posição'),
-                    controller: positionController,
-                  ),
-                  TextField(
-                    autofocus: false,
-                    decoration: InputDecoration(hintText: 'Número na Camisola'),
-                    controller: numberController,
-                  ),
-                ],
-              ),
-            ),
-          ]))
+                ),
+              ]))
         ])),
         floatingActionButton: FloatingActionButton.extended(
             backgroundColor: Color.fromARGB(255, 18, 18, 18),
@@ -242,19 +301,37 @@ class _AddPlayerState extends State<AddPlayer> {
             icon: const Icon(
                 color: Color(0xFFFFFFFF), size: 26, Iconsax.add_circle),
             onPressed: () {
+              //Teste de Antioping
+              var originalAntidopingDate =
+                  DateTime.parse(antidopingDateValue.toString());
+              final finalAntidopingDate =
+                  DateFormat('yyyy-MM-dd').format(originalAntidopingDate);
+
+              //Data de contrato
               var originalContractDate =
                   DateTime.parse(contractDateValue.toString());
               final finalContractDate =
                   DateFormat('yyyy-MM-dd').format(originalContractDate);
+              //Data de expiração de contrato
+              var contractDurationValue =
+                  monthsToDays(int.parse(contractDurationController.text));
+
+              DateTime originalContractExpiringDate = originalContractDate
+                  .add(Duration(days: contractDurationValue));
+
+              final finalContractExpiringDate =
+                  DateFormat('yyyy-MM-dd').format(originalContractExpiringDate);
 
               final name = nameController.text;
               final age = ageController.text;
               final position = positionController.text;
               final number = numberController.text;
               final antidoping = antidopingBool;
+              final antidopingDate = finalAntidopingDate;
               final antidopingDays = antidopingDaysController.text;
               final contractDate = finalContractDate;
-              final contractDays = contractDaysController.text;
+              final contractDuration = contractDurationController.text;
+              final contractExpiringDate = finalContractExpiringDate;
               final passportNumber = passportNumberController.text;
               final teamId = teamIdValue.toString();
 
@@ -264,9 +341,11 @@ class _AddPlayerState extends State<AddPlayer> {
                   position: position,
                   number: number,
                   antidoping: antidoping,
+                  antidopingDate: antidopingDate,
                   antidopingDays: antidopingDays,
                   contractDate: contractDate,
-                  contractDays: contractDays,
+                  contractDuration: contractDuration,
+                  contractExpiringDate: contractExpiringDate,
                   passportNumber: passportNumber,
                   teamId: teamId);
               Navigator.pop(context);
@@ -281,6 +360,13 @@ class _AddPlayerState extends State<AddPlayer> {
         style: TextStyle(fontWeight: FontWeight.bold),
       ));
 
+  // Transforma um dado número de meses, neste caso para a duração do contrato, em dias
+  int monthsToDays(int months) {
+    var durationInMonths = Duration(days: months * 30);
+    return (durationInMonths.inDays / 30).round();
+  }
+
+  //Mostrar mensagem flutuante de sucesso.
   void showToastMessage(String message) {
     Fluttertoast.showToast(
         msg: message,
@@ -292,16 +378,18 @@ class _AddPlayerState extends State<AddPlayer> {
         gravity: ToastGravity.CENTER);
   }
 
-  //This function is responsible to create new players
+  //Enviamos os dados para criar o Jogador
   Future createPlayer(
       {required String name,
       required String age,
       required String position,
       required String number,
       required bool antidoping,
+      required String antidopingDate,
       required String antidopingDays,
       required String contractDate,
-      required String contractDays,
+      required String contractDuration,
+      required String contractExpiringDate,
       required String passportNumber,
       required String teamId}) async {
     //Reference document to create new player
@@ -314,9 +402,11 @@ class _AddPlayerState extends State<AddPlayer> {
         position: position,
         number: number,
         antidoping: antidoping,
+        antidopingDate: antidopingDate,
         antidopingDays: antidopingDays,
         contractDate: contractDate,
-        contractDays: contractDays,
+        contractDuration: contractDuration,
+        contractExpiringDate: contractExpiringDate,
         passportNumber: passportNumber,
         teamId: teamId);
     final json = player.toJson();

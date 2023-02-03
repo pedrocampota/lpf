@@ -2,6 +2,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import 'package:lpf/Screens/TableScreen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -115,41 +116,96 @@ class Players extends StatelessWidget {
                         builder: (BuildContext context,
                             AsyncSnapshot<String> snapshot) {
                           if (snapshot.hasData) {
-                            return Text(
-                              snapshot.data ?? '',
-                              style: TextStyle(
-                                color: Colors.grey.shade600,
-                              ),
-                            ); //!TODO
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  snapshot.data ?? '',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Text(
+                                  ', ${player.position}',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade500,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Text(
+                                  ', ${player.age} anos',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade500,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            );
                           } else if (snapshot.hasError) {
                             return Text('Erro: ${snapshot.error}');
                           } else {
-                            return CircularProgressIndicator();
+                            return Text('');
                           }
                         },
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            'Idade: ${player.age}',
-                            style: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontSize: 14,
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Contratado a:',
+                              style: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Posição: ${player.position}',
-                            style: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontSize: 14,
+                            SizedBox(
+                              width: 2,
                             ),
-                          ),
-                        ],
-                      )
+                            Text(
+                              getFormatedDate(
+                                  DateTime.parse(player.contractDate)),
+                              style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            Text(
+                              ', há',
+                              style: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontSize: 12,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 2,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 2, right: 2),
+                              child: Text(
+                                getContractDays(
+                                    DateTime.parse(player.contractDate)),
+                                style: TextStyle(
+                                    color: Colors.grey.shade500,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Text(
+                              'dias',
+                              style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   )
                 ],
@@ -159,14 +215,15 @@ class Players extends StatelessWidget {
         ),
       );
 
-  void showToastMessage(String leagueName) {
-    Fluttertoast.showToast(
-        msg: "A " + leagueName + " estará disponivel.",
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.black,
-        textColor: Colors.white,
-        fontSize: 12,
-        gravity: ToastGravity.CENTER);
+  // Função usada para pegar na data atual e obter a data de 180 dias (6 meses) para a trás
+  String getContractDays(DateTime date) {
+    var difference = DateTime.now().difference(date).inDays;
+    return difference.toString();
+  }
+
+  // Formatar data para a desejada
+  getFormatedDate(DateTime date) {
+    var initialDate = DateTime.parse(date.toString());
+    return DateFormat('dd/MM/yyyy').format(initialDate);
   }
 }

@@ -221,7 +221,12 @@ class NewsState extends State<News> {
           IconButton(
             icon: const Icon(Iconsax.menu_1),
             color: Colors.white,
-            onPressed: () {},
+            onPressed: () async {
+              const url = "https://www.record.pt/";
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
+              }
+            },
           )
         ],
       ),

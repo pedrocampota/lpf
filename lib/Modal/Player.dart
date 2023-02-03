@@ -9,8 +9,11 @@ class Player {
   final String position;
   final String number;
   final String contractDate;
-  final String contractDays;
+  final String contractDuration;
+  final String contractExpiringDate;
+  final String antidopingDate;
   final bool antidoping;
+
   final String antidopingDays;
   final String teamId;
 
@@ -22,8 +25,10 @@ class Player {
       this.position = '',
       this.number = '',
       required this.contractDate,
-      required this.contractDays,
+      required this.contractDuration,
+      required this.contractExpiringDate,
       required this.antidoping,
+      required this.antidopingDate,
       required this.antidopingDays,
       required this.teamId});
 
@@ -36,8 +41,10 @@ class Player {
         'position': position,
         'number': number,
         'contractDate': contractDate,
-        'contractDays': contractDays,
+        'contractDuration': contractDuration,
+        'contractExpiringDate': contractExpiringDate,
         'antidoping': antidoping,
+        'antidopingDate': antidopingDate,
         'antidopingDays': antidopingDays,
         'teamId': teamId
       };
@@ -51,8 +58,10 @@ class Player {
       position: json['position'],
       number: json['number'],
       contractDate: json['contractDate'],
-      contractDays: json['contractDays'],
+      contractDuration: json['contractDuration'],
+      contractExpiringDate: json['contractExpiringDate'],
       antidoping: json['antidoping'],
+      antidopingDate: json['antidopingDate'],
       antidopingDays: json['antidopingDays'],
       teamId: json['teamId']);
 }

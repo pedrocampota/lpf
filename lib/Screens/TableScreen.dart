@@ -19,7 +19,7 @@ class _TableScreenState extends State<TableScreen> {
   late TextEditingController controller;
   String numJornada = '';
 
-  List<String> items = ['Item 1', 'Item 2', 'Item 3'];
+  List<String> items = [];
 
   @override
   void initState() {
@@ -35,11 +35,11 @@ class _TableScreenState extends State<TableScreen> {
     super.dispose();
   }
 
-  // Sync table with api request data
+  // Sincronizar tabela com os dados do pedido à Api
   getTable() async {
     http.Response response = await http.get(
         Uri.parse(
-            'http://api.football-data.org/v4/competitions/${widget.code}/standings/?season=2022&matchday=34'),
+            'http://api.football-data.org/v4/competitions/${widget.code}/standings/?season=2022&matchday='),
         headers: {'X-Auth-Token': '6a21f4ec793b42d5b2b4d2a005e47dc0'});
     String body = response.body;
     Map data = jsonDecode(body);
@@ -49,10 +49,8 @@ class _TableScreenState extends State<TableScreen> {
     });
   }
 
+  // Ao escolher a jornada voltar a fazer um pedido à api mas agora com
   Future refresh() async {
-    //Removing items before every request
-    //setState(() => items.clear());
-
     http.Response response = await http.get(
         Uri.parse(
             'http://api.football-data.org/v4/competitions/${widget.code}/standings/?season=2022&matchday=${controller.text}'),
@@ -87,7 +85,6 @@ class _TableScreenState extends State<TableScreen> {
               final numJornada = await openDialogFilter();
               if (numJornada == null || numJornada.isEmpty) return;
               setState(() => this.numJornada = numJornada);
-              //Navigator.pushReplacement(context,MaterialPageRoute(builder: (BuildContext context) => super.widget));
             },
           )
         ],
@@ -245,10 +242,7 @@ class _TableScreenState extends State<TableScreen> {
                               )),
                           Padding(
                             padding: EdgeInsets.only(
-                                left: 5,
-                                bottom: 0,
-                                right: 0,
-                                top: 0), //apply padding to some sides only
+                                left: 5, bottom: 0, right: 0, top: 0),
                             child: team['team']['shortName'].toString().length >
                                     11
                                 ? Text(team['team']['shortName']
