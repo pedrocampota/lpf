@@ -89,6 +89,8 @@ flutter:
      - media/images/ligas/segunda_liga.png
      - media/images/ligas/terceira_liga.png
      - media/images/ligas/liga_bpi.png
+     
+     - media/images/construcao.png
 
      - media/images/plus_news_bg.jpg
      - media/images/plus_transfermarket_bg.jpg

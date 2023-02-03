@@ -17,6 +17,8 @@ class AddLeague extends StatefulWidget {
 }
 
 class _AddLeagueState extends State<AddLeague> {
+  Color mainColor = Color.fromARGB(255, 18, 18, 18);
+  Color secondaryColor = Colors.blue.shade400;
   final nameController = TextEditingController();
 
   @override
@@ -40,6 +42,7 @@ class _AddLeagueState extends State<AddLeague> {
           Expanded(
               child: ListView(padding: EdgeInsets.all(10), children: [
             Container(
+              width: double.infinity,
               child: Column(
                 children: [
                   TitleBar(
@@ -47,10 +50,32 @@ class _AddLeagueState extends State<AddLeague> {
                   SizedBox(
                     height: 10,
                   ),
-                  TextField(
+                  TextFormField(
+                    validator: validateInputs,
                     autofocus: false,
-                    decoration: InputDecoration(hintText: 'Nome'),
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                      labelText: 'Nome da Liga',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(
+                          color: mainColor,
+                          width: 0.5,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: mainColor,
+                          width: 1,
+                        ),
+                      ),
+                    ),
                     controller: nameController,
+                    maxLines: 1,
                   ),
                 ],
               ),
@@ -96,5 +121,12 @@ class _AddLeagueState extends State<AddLeague> {
 
     //Create document and write data to Firebase
     await docLeague.set(json);
+  }
+
+  String? validateInputs(value) {
+    if (value.isEmpty) {
+      return 'Campo obrigatório';
+    }
+    return null;
   }
 }

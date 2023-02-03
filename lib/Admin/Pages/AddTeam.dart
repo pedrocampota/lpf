@@ -7,6 +7,7 @@ import 'package:lpf/Widgets/TitleBar.dart';
 
 //Modal Objects
 import 'package:lpf/Modal/Team.dart';
+import 'package:lpf/main.dart';
 
 class AddTeam extends StatefulWidget {
   const AddTeam({super.key});
@@ -23,6 +24,8 @@ class DropdownItem {
 }
 
 class _AddTeamState extends State<AddTeam> {
+  Color mainColor = Color.fromARGB(255, 18, 18, 18);
+  Color secondaryColor = Colors.blue.shade400;
   final nameController = TextEditingController();
   final leagueIdController = TextEditingController();
 
@@ -84,17 +87,15 @@ class _AddTeamState extends State<AddTeam> {
                       isExpanded: true,
                       style: Theme.of(context).textTheme.bodyMedium,
                       decoration: InputDecoration(
-                        hintText: 'Escolher liga...',
+                        hintText: 'Escolher',
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                width: 1,
-                                color: Color.fromARGB(255, 18, 18, 18))),
+                            borderSide:
+                                BorderSide(width: 0.5, color: mainColor)),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                width: 1,
-                                color: Color.fromARGB(255, 18, 18, 18))),
+                            borderSide:
+                                BorderSide(width: 0.5, color: mainColor)),
                       ),
                       value: _leagueSelectedItem,
                       items: _leagueDropdownItems.map((DropdownItem item) {
@@ -114,10 +115,32 @@ class _AddTeamState extends State<AddTeam> {
                   SizedBox(
                     height: 10,
                   ),
-                  TextField(
+                  TextFormField(
+                    validator: validateInputs,
                     autofocus: false,
-                    decoration: InputDecoration(hintText: 'Nome da Equipa'),
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                      labelText: 'Nome da Equipa',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(
+                          color: mainColor,
+                          width: 0.5,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: mainColor,
+                          width: 1,
+                        ),
+                      ),
+                    ),
                     controller: nameController,
+                    maxLines: 1,
                   ),
                 ],
               ),
@@ -164,5 +187,12 @@ class _AddTeamState extends State<AddTeam> {
 
     //Create document and write data to Firebase
     await docTeam.set(json);
+  }
+
+  String? validateInputs(value) {
+    if (value.isEmpty) {
+      return 'Campo obrigatório';
+    }
+    return null;
   }
 }
